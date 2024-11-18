@@ -14,10 +14,14 @@ foreach ($cars as $car) {
 
     foreach ($properties as $property) {
         $property->setAccessible(true);
+
         echo "  " . $property->getName() . ": " . $property->getValue($car);
+
         if ($property->getName() == 'photoFileName')
             echo "; file extension: " . $car->getPhotoFileExt();
+
         echo "\n";
     }
+
     echo "\n";
 }

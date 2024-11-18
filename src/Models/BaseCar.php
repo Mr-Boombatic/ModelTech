@@ -4,21 +4,26 @@ namespace App\Models;
 
 use InvalidArgumentException;
 
-class BaseCar {
-    protected $carType;
-    protected $brand;
-    protected $photoFileName;
-    protected $carrying;
+class BaseCar
+{
+    protected string $carType;
+    protected string $brand;
+    protected string $photoFileName;
+    protected float $carrying;
 
-    const ALLOWED_CAR_TYPES = ['car', 'truck', 'spec_machine'];
+    private const ALLOWED_CAR_TYPES = ['car', 'truck', 'spec_machine'];
 
     /**
+     * BaseCar constructor.
+     *
      * @param string $carType
      * @param string $brand
      * @param string $photoFileName
-     * @param string $carrying
+     * @param string|float $carrying
+     * @throws InvalidArgumentException
      */
-    public function __construct(string $carType, string $brand, string $photoFileName, string $carrying) {
+    public function __construct(string $carType, string $brand, string $photoFileName, $carrying)
+    {
         $this->setCarType($carType);
         $this->setCarrying($carrying);
 
@@ -26,46 +31,57 @@ class BaseCar {
         $this->photoFileName = $photoFileName;
     }
 
-    private function setCarType($carType)
+    /**
+     * @param string $carType
+     * @throws InvalidArgumentException
+     */
+    private function setCarType(string $carType): void
     {
-        if (!in_array($carType, self::ALLOWED_CAR_TYPES)) {
+        if (!in_array($carType, self::ALLOWED_CAR_TYPES, true)) {
             throw new InvalidArgumentException("Incorrect vehicle type. Valid values: " . implode(", ", self::ALLOWED_CAR_TYPES));
         }
         $this->carType = $carType;
     }
 
-    private function setCarrying($carrying)
+    /**
+     * @param string|float $carrying
+     * @throws InvalidArgumentException
+     */
+    private function setCarrying($carrying): void
     {
-        $this->validateNonNegativeNumericString($carrying);
+        $this->validateNonNegativeNumericString((string)$carrying);
         $this->carrying = (float)$carrying;
     }
 
-    protected function validateNonNegativeNumericString($string): void
+    /**
+     * @param string $string
+     * @throws InvalidArgumentException
+     */
+    protected function validateNonNegativeNumericString(string $string): void
     {
         if (empty($string)) {
-            throw new InvalidArgumentException("The string cannot be empty");
+            throw new InvalidArgumentException("The string cannot be empty.");
         }
 
         if (!is_numeric($string)) {
-            throw new InvalidArgumentException("The value must contain only a number (integer or real): ". $string);
+            throw new InvalidArgumentException("The value must contain only a number (integer or real): " . $string);
         }
 
         $number = (float)$string;
 
         if ($number < 0) {
-            throw new InvalidArgumentException("The number must be non-negative");
+            throw new InvalidArgumentException("The number must be non-negative.");
         }
     }
 
     /**
-     * Может быть возвращена пустая строка, если файл не имеет расширения
+     * Returns the extension of the photo file or an empty string if none exists.
+     *
      * @return string
      */
-    public function getPhotoFileExt() {
+    public function getPhotoFileExt(): string
+    {
         $info = pathinfo($this->photoFileName);
-        if (isset($info['extension']))
-            return $info['extension'];
-        else
-            return "";
+        return $info['extension'] ?? '';
     }
 }

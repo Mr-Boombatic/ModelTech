@@ -70,27 +70,4 @@ class Truck extends BaseCar
     {
         return $this->bodyLength * $this->bodyWidth * $this->bodyHeight;
     }
-
-    /**
-     * Validate that a given string is a non-negative numeric value.
-     *
-     * @param string $string
-     * @throws InvalidArgumentException
-     */
-    protected function validateNonNegativeNumericString(string $string): void
-    {
-        if (empty($string)) {
-            throw new InvalidArgumentException("The string cannot be empty.");
-        }
-
-        if (!is_numeric($string)) {
-            throw new InvalidArgumentException("The value must contain only a number (integer or real): " . $string);
-        }
-
-        $number = (float)$string;
-
-        if ($number < 0) {
-            throw new InvalidArgumentException("The number must be non-negative.");
-        }
-    }
 }

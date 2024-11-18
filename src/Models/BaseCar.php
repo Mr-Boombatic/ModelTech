@@ -44,12 +44,12 @@ class BaseCar
     }
 
     /**
-     * @param string|float $carrying
+     * @param string $carrying
      * @throws InvalidArgumentException
      */
-    private function setCarrying($carrying): void
+    private function setCarrying(string $carrying): void
     {
-        $this->validateNonNegativeNumericString((string)$carrying);
+        $this->validateNonNegativeNumericString($carrying);
         $this->carrying = (float)$carrying;
     }
 
